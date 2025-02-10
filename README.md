@@ -24,7 +24,7 @@ By the end of this guide, you will have a **secure and robust** SSH authenticati
    - [📂 Set Up SSH Directory for `devops`](#-set-up-ssh-directory-for-devops)
    - [🔏 Configure Public Key Authentication](#-configure-public-key-authentication)
    - [⚡ Update SSH Configuration](#-update-ssh-configuration)
-   - [🛠️ Grant `sudo` Privileges (Optional)](#-grant-sudo-privileges-optional)
+   - [🛠️ Grant `sudo` Privileges (Optional)](#%EF%B8%8F-grant-sudo-privileges-optional)
 
 ---
 
