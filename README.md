@@ -1,5 +1,16 @@
-# 🔐 Secure SSH Access and User Setup on Ubuntu Server
 
+readme_emoji_detailed = """# 🔐 Secure SSH Access and User Setup on Ubuntu Server
+
+Setting up secure SSH access is crucial for managing your Ubuntu server efficiently and securely. This guide walks you through the process of creating a secure **SSH key-based authentication system**, eliminating the need for password-based logins. By following this step-by-step tutorial, you will:  
+
+✅ Set up a **new user (`devops`)** for better security and access management  
+✅ **Disable password authentication** and enable **key-based login** for improved security  
+✅ **Ensure proper file permissions** and configuration settings to prevent unauthorized access  
+✅ Learn how to **grant `sudo` privileges** to the `devops` user (optional)  
+
+By the end of this guide, you will have a **secure and robust** SSH authentication system that ensures only authorized users can access your server. 🚀  
+
+---
 ## 📜 Table of Contents
 1. [📖 Introduction](#-introduction)
 2. [⚙️ Prerequisites](#️-prerequisites)
