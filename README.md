@@ -18,7 +18,7 @@ By the end of this guide, you will have a **secure and robust** SSH authenticati
    - [🔐 Generate a Public Key from the Private Key](#-generate-a-public-key-from-the-private-key)
    - [📤 Copy the Public Key to the Server](#-copy-the-public-key-to-the-server)
    - [✅ Verify SSH Access as `devops`](#-verify-ssh-access-as-devops)
-4. [🖥️ Ubuntu Server Setup](#-ubuntu-server-setup)
+4. [🖥️ Ubuntu Server Setup](#%EF%B8%8F-ubuntu-server-setup)
    - [🔓 Log in to the Server as Root](#-log-in-to-the-server-as-root)
    - [👤 Create and Configure the `devops` User](#-create-and-configure-the-devops-user)
    - [📂 Set Up SSH Directory for `devops`](#-set-up-ssh-directory-for-devops)
