@@ -89,7 +89,16 @@ cat /home/ubuntu_user/key.pub >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 rm /home/ubuntu_user/key.pub
 chown -R ubuntu_user:ubuntu_user ~/.ssh
-```
+```🚀 Now ubuntu_user can securely access the server using the .pem key without a password! 🔥
+🔑 Public Key Cryptography: Strong encryption, hard to break.
+💻 No Password Storage: No password to intercept.
+⚔️ Brute Force Protection: Harder to guess than passwords.
+🕵️‍♂️ Keylogging Protection: No keystrokes to capture.
+🔒 Complexity & Strength: Random, secure, long keys.
+🛡️ Single-Use: Keys can be revoked, and sessions are short-lived.
+🔒 Extra Protection: Option to add a passphrase for the private key.
+
+🚀 More secure than passwords! 
 
 ## ⚡ Update SSH Configuration  
 Edit the SSH configuration file:  
@@ -115,13 +124,14 @@ sudo usermod -aG sudo ubuntu_user
 
 ---
 
-🚀 Now ubuntu_user can securely access the server using the .pem key without a password! 🔥
-🔑 Public Key Cryptography: Strong encryption, hard to break.
-💻 No Password Storage: No password to intercept.
-⚔️ Brute Force Protection: Harder to guess than passwords.
-🕵️‍♂️ Keylogging Protection: No keystrokes to capture.
-🔒 Complexity & Strength: Random, secure, long keys.
-🛡️ Single-Use: Keys can be revoked, and sessions are short-lived.
-🔒 Extra Protection: Option to add a passphrase for the private key.
+🚀 Now ubuntu_user can securely access the server using the .pem key without a password! 🔥  
+🔑 **Public Key Cryptography**: Strong encryption, hard to break.  
+💻 **No Password Storage**: No password to intercept.  
+⚔️ **Brute Force Protection**: Harder to guess than passwords.  
+🕵️‍♂️ **Keylogging Protection**: No keystrokes to capture.  
+🔒 **Complexity & Strength**: Random, secure, long keys.  
+🛡️ **Single-Use**: Keys can be revoked, and sessions are short-lived.  
+🔒 **Extra Protection**: Option to add a passphrase for the private key.  
 
-🚀 More secure than passwords! 
+🚀 **More secure than passwords!**
+
