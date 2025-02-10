@@ -43,6 +43,3 @@ This repository provides a guide for securely setting up SSH access to an Ubuntu
 
 If you discover a security vulnerability, please report it by creating an issue in this repository. Please follow the Responsible Disclosure process, and do not publicly disclose the vulnerability until a fix has been made.
 
-## License
-
-This repository is licensed under the MIT License. See the LICENSE file for more details.
