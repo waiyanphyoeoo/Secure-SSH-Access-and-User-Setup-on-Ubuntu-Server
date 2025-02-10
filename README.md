@@ -104,6 +104,7 @@ PasswordAuthentication no
 Restart SSH:  
 ```bash
 systemctl restart ssh
+systemctl restart ssh.service
 ```
 
 ## 🛠️ Grant `sudo` Privileges (Optional) 
