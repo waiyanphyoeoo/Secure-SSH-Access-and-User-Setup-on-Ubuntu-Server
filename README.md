@@ -34,7 +34,7 @@ This guide provides step-by-step instructions for configuring **secure SSH acces
 ---
 
 ## ⚙️ Prerequisites  
-✅ `.pem` key file (e.g., `Phi-Mysql-Export.pem`)  
+✅ `.pem` key file (e.g., `key.pem`)  
 ✅ Ubuntu server with root access  
 ✅ SSH and SCP installed on the local machine  
 
@@ -44,22 +44,22 @@ This guide provides step-by-step instructions for configuring **secure SSH acces
 
 ## 🔑 Set Permissions for the `.pem` File  
 ```bash
-chmod 400 Phi-Mysql-Export.pem
+chmod 400 key.pem
 ```
 
 ## 🔐 Generate a Public Key from the Private Key  
 ```bash
-ssh-keygen -y -f Phi-Mysql-Export.pem > Phi-Mysql-Export.pub
+ssh-keygen -y -f key.pem > key.pub
 ```
 
 ## 📤 Copy the Public Key to the Server  
 ```bash
-scp -i Phi-Mysql-Export.pem Phi-Mysql-Export.pub root@<server-ip>:/home/ubuntu_user/
+scp -i key.pem key.pub root@<server-ip>:/home/ubuntu_user/
 ```
 
 ## ✅ Verify SSH Access as `ubuntu_user`  
 ```bash
-ssh -i Phi-Mysql-Export.pem ubuntu_user@<server-ip>
+ssh -i key.pem ubuntu_user@<server-ip>
 ```
 
 ---
@@ -68,7 +68,7 @@ ssh -i Phi-Mysql-Export.pem ubuntu_user@<server-ip>
 
 ## 🔓 Log in to the Server as Root  
 ```bash
-ssh -i Phi-Mysql-Export.pem root@<server-ip>
+ssh -i key.pem root@<server-ip>
 ```
 
 ## 👤 Create and Configure the `ubuntu_user` User  
@@ -85,9 +85,9 @@ chmod 700 ~/.ssh
 
 ## 🔏 Configure Public Key Authentication  
 ```bash
-cat /home/ubuntu_user/Phi-Mysql-Export.pub >> ~/.ssh/authorized_keys
+cat /home/ubuntu_user/key.pub >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
-rm /home/ubuntu_user/Phi-Mysql-Export.pub
+rm /home/ubuntu_user/key.pub
 chown -R ubuntu_user:ubuntu_user ~/.ssh
 ```
 
