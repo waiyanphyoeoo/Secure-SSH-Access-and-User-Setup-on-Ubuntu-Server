@@ -106,7 +106,7 @@ Restart SSH:
 systemctl restart ssh
 ```
 
-## 🛠️ Grant `sudo` Privileges (Optional)  
+## 🛠️ Grant `sudo` Privileges (Optional) 
 ```bash
 su - another_admin_user
 sudo usermod -aG sudo devops
