@@ -2,10 +2,10 @@
 
 <p>Setting up secure SSH access is crucial for managing your Ubuntu server efficiently and securely. This guide walks you through the process of creating a secure **SSH key-based authentication system**, eliminating the need for password-based logins. By following this step-by-step tutorial, you will: </p>
 
-✅ Set up a **new user (`devops`)** for better security and access management  
+✅ Set up a **new user (`ubuntu_user`)** for better security and access management  
 ✅ **Disable password authentication** and enable **key-based login** for improved security  
 ✅ **Ensure proper file permissions** and configuration settings to prevent unauthorized access  
-✅ Learn how to **grant `sudo` privileges** to the `devops` user (optional)  
+✅ Learn how to **grant `sudo` privileges** to the `ubuntu_user` user (optional)  
 
 By the end of this guide, you will have a **secure and robust** SSH authentication system that ensures only authorized users can access your server. 🚀  
 
@@ -17,11 +17,11 @@ By the end of this guide, you will have a **secure and robust** SSH authenticati
    - [🔑 Set Permissions for the `.pem` File](#-set-permissions-for-the-pem-file)
    - [🔐 Generate a Public Key from the Private Key](#-generate-a-public-key-from-the-private-key)
    - [📤 Copy the Public Key to the Server](#-copy-the-public-key-to-the-server)
-   - [✅ Verify SSH Access as `devops`](#-verify-ssh-access-as-devops)
+   - [✅ Verify SSH Access as `ubuntu_user`](#-verify-ssh-access-as-ubuntu_user)
 4. [🖥️ Ubuntu Server Setup](#%EF%B8%8F-ubuntu-server-setup)
    - [🔓 Log in to the Server as Root](#-log-in-to-the-server-as-root)
-   - [👤 Create and Configure the `devops` User](#-create-and-configure-the-devops-user)
-   - [📂 Set Up SSH Directory for `devops`](#-set-up-ssh-directory-for-devops)
+   - [👤 Create and Configure the `ubuntu_user` User](#-create-and-configure-the-ubuntu_user-user)
+   - [📂 Set Up SSH Directory for `ubuntu_user`](#-set-up-ssh-directory-for-ubuntu_user)
    - [🔏 Configure Public Key Authentication](#-configure-public-key-authentication)
    - [⚡ Update SSH Configuration](#-update-ssh-configuration)
    - [🛠️ Grant `sudo` Privileges (Optional)](#%EF%B8%8F-grant-sudo-privileges-optional)
@@ -29,7 +29,7 @@ By the end of this guide, you will have a **secure and robust** SSH authenticati
 ---
 
 ## 📖 Introduction  
-This guide provides step-by-step instructions for configuring **secure SSH access** to an Ubuntu server using a `.pem` key. It includes setting up a new user (`devops`), configuring SSH permissions, and enabling public key authentication.  
+This guide provides step-by-step instructions for configuring **secure SSH access** to an Ubuntu server using a `.pem` key. It includes setting up a new user (`ubuntu_user`), configuring SSH permissions, and enabling public key authentication.  
 
 ---
 
@@ -54,12 +54,12 @@ ssh-keygen -y -f Phi-Mysql-Export.pem > Phi-Mysql-Export.pub
 
 ## 📤 Copy the Public Key to the Server  
 ```bash
-scp -i Phi-Mysql-Export.pem Phi-Mysql-Export.pub root@<server-ip>:/home/devops/
+scp -i Phi-Mysql-Export.pem Phi-Mysql-Export.pub root@<server-ip>:/home/ubuntu_user/
 ```
 
-## ✅ Verify SSH Access as `devops`  
+## ✅ Verify SSH Access as `ubuntu_user`  
 ```bash
-ssh -i Phi-Mysql-Export.pem devops@<server-ip>
+ssh -i Phi-Mysql-Export.pem ubuntu_user@<server-ip>
 ```
 
 ---
@@ -71,13 +71,13 @@ ssh -i Phi-Mysql-Export.pem devops@<server-ip>
 ssh -i Phi-Mysql-Export.pem root@<server-ip>
 ```
 
-## 👤 Create and Configure the `devops` User  
+## 👤 Create and Configure the `ubuntu_user` User  
 ```bash
-adduser devops
-su - devops
+adduser ubuntu_user
+su - ubuntu_user
 ```
 
-## 📂 Set Up SSH Directory for `devops`  
+## 📂 Set Up SSH Directory for `ubuntu_user`  
 ```bash
 mkdir -p ~/.ssh
 chmod 700 ~/.ssh
@@ -85,10 +85,10 @@ chmod 700 ~/.ssh
 
 ## 🔏 Configure Public Key Authentication  
 ```bash
-cat /home/devops/Phi-Mysql-Export.pub >> ~/.ssh/authorized_keys
+cat /home/ubuntu_user/Phi-Mysql-Export.pub >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
-rm /home/devops/Phi-Mysql-Export.pub
-chown -R devops:devops ~/.ssh
+rm /home/ubuntu_user/Phi-Mysql-Export.pub
+chown -R ubuntu_user:ubuntu_user ~/.ssh
 ```
 
 ## ⚡ Update SSH Configuration  
@@ -109,12 +109,12 @@ systemctl restart ssh
 ## 🛠️ Grant `sudo` Privileges (Optional) 
 ```bash
 su - another_admin_user
-sudo usermod -aG sudo devops
+sudo usermod -aG sudo ubuntu_user
 ```
 
 ---
 
-🚀 Now devops can securely access the server using the .pem key without a password! 🔥
+🚀 Now ubuntu_user can securely access the server using the .pem key without a password! 🔥
 🔑 Public Key Cryptography: Strong encryption, hard to break.
 💻 No Password Storage: No password to intercept.
 ⚔️ Brute Force Protection: Harder to guess than passwords.
