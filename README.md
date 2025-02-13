@@ -91,7 +91,6 @@ rm /home/ubuntu_user/key.pub
 chown -R ubuntu_user:ubuntu_user ~/.ssh
 ```
 
-🚀 More secure than passwords! 
 
 ## ⚡ Update SSH Configuration  
 Edit the SSH configuration file:  
