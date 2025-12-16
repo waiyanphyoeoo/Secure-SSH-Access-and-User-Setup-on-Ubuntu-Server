@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSH Key Setup Master Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Padauk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        gold: {
+                            100: '#FFF9C4',
+                            300: '#FDD835',
+                            400: '#FBC02D',
+                            500: '#F9A825',
+                            600: '#E65100', // Deep gold/orange
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Fluid Background Animation */
+        .fluid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: moveOrb 20s infinite alternate ease-in-out;
+        }
+
+        .orb-1 {
+            top: -10%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, #ffffff 0%, rgba(255,255,255,0) 70%);
+        }
+
+        .orb-2 {
+            bottom: 0%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #FBC02D 0%, rgba(251, 192, 45, 0) 70%);
+            animation-duration: 25s;
+        }
+
+        .orb-3 {
+            top: 40%;
+            left: 40%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #333 0%, rgba(0,0,0,0) 70%);
+            animation-duration: 30s;
+        }
+
+        @keyframes moveOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
+        }
+
+        /* Gold Gradient Text */
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #ffffff 0%, #FBC02D 50%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: shine 4s linear infinite;
+        }
+
+        /* Glass Card Design */
+        .card-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hover Effect: Gradient Border & Lift */
+        .card-glass::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(251, 192, 45, 0.1));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            opacity: 0.5;
+        }
+
+        .card-glass:hover {
+            transform: translateY(-5px) scale(1.005);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+                        0 0 20px rgba(251, 192, 45, 0.1); /* Gold glow */
+            border-color: rgba(251, 192, 45, 0.3);
+        }
+
+        .card-glass:hover::before {
+            opacity: 1;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(251, 192, 45, 0.4));
+        }
+
+        /* Code Block Styling */
+        .code-block {
+            background: #0a0a0a;
+            border-left: 2px solid #555;
+            transition: all 0.3s ease;
+        }
+        
+        .card-glass:hover .code-block {
+            border-left-color: #FBC02D;
+            background: #000;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        /* Selection Color */
+        ::selection {
+            background: #FBC02D;
+            color: #000;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FBC02D;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-20 selection:bg-gold-500 selection:text-black">
+
+    <!-- Fluid Background -->
+    <div class="fluid-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Navbar / Header -->
+    <header class="fixed top-0 w-full z-50 card-glass border-b-0">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3 group cursor-pointer">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-gray-800 to-black flex items-center justify-center border border-gray-700 group-hover:border-yellow-400 transition-colors">
+                    <i class="fa-solid fa-key text-white group-hover:text-yellow-400 text-sm transition-colors"></i>
+                </div>
+                <h1 class="text-lg font-bold tracking-wider text-gray-200 group-hover:text-white transition-colors">SSH <span class="text-yellow-500">Master</span></h1>
+            </div>
+            <div class="text-[10px] font-mono tracking-widest text-gray-400 border border-gray-800 bg-black/50 px-2 py-1 rounded backdrop-blur-sm">
+                V1.0 • PROD
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-6 pt-32">
+
+        <!-- Title Section -->
+        <section class="mb-16 text-center relative z-10">
+            <div class="inline-block mb-4 px-4 py-1 rounded-full border border-yellow-500/20 bg-yellow-500/5 backdrop-blur-sm">
+                <span class="text-xs font-mono text-yellow-400 tracking-widest uppercase">DevOps Security Protocol</span>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 gold-gradient-text leading-tight pb-2 tracking-tight">
+                SSH Key Setup<br>Master Guide
+            </h1>
+            <p class="text-gray-400 text-lg mb-8 leading-relaxed max-w-2xl mx-auto font-light">
+                (General Template)<br>
+                <span class="text-gray-300">Server အသစ်တစ်ခုတွင် User အသစ်ဖန်တီးပြီး၊ Password မလိုဘဲ SSH Key ဖြင့် လုံခြုံစွာ ဝင်ရောက်နိုင်ရန် ပြင်ဆင်ခြင်း။</span>
+            </p>
+            
+            <!-- Tags -->
+            <div class="flex flex-wrap justify-center gap-3 mb-6">
+                <span class="px-4 py-1.5 rounded-full card-glass text-xs font-mono text-gray-300 hover:text-white hover:border-yellow-500/50 cursor-default transition-all">#DevOps</span>
+                <span class="px-4 py-1.5 rounded-full card-glass text-xs font-mono text-gray-300 hover:text-white hover:border-yellow-500/50 cursor-default transition-all">#Security</span>
+                <span class="px-4 py-1.5 rounded-full bg-green-900/10 border border-green-500/30 text-xs font-mono text-green-400 hover:bg-green-900/20 transition-all">🟢 Status: Ready</span>
+            </div>
+        </section>
+
+        <!-- Variable Legend -->
+        <section class="mb-20 card-glass rounded-2xl p-8 border-t border-t-yellow-500/50">
+            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                <span class="w-8 h-8 rounded-full bg-yellow-500/10 flex items-center justify-center text-yellow-400">
+                    <i class="fa-solid fa-pen-to-square text-sm"></i>
+                </span>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">Variables Legend</span>
+                <span class="text-xs font-normal text-gray-500 ml-auto font-mono opacity-60">(အစားထိုးရန်)</span>
+            </h2>
+            <div class="grid gap-4 font-mono text-sm">
+                <div class="group flex flex-col md:flex-row gap-4 bg-black/40 p-4 rounded-xl border border-white/5 hover:border-yellow-500/20 transition-colors">
+                    <span class="text-yellow-400 font-bold min-w-[120px] flex items-center gap-2">
+                        <i class="fa-solid fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        &lt;KEY_NAME&gt;
+                    </span>
+                    <span class="text-gray-400 group-hover:text-gray-300 transition-colors">👉 မိမိ Key ဖိုင်နာမည် (Example: project-x, aws-key)</span>
+                </div>
+                <div class="group flex flex-col md:flex-row gap-4 bg-black/40 p-4 rounded-xl border border-white/5 hover:border-yellow-500/20 transition-colors">
+                    <span class="text-yellow-400 font-bold min-w-[120px] flex items-center gap-2">
+                        <i class="fa-solid fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        &lt;SERVER_IP&gt;
+                    </span>
+                    <span class="text-gray-400 group-hover:text-gray-300 transition-colors">👉 Server IP Address (Example: 192.168.1.10, 150.95.xx.xx)</span>
+                </div>
+                <div class="group flex flex-col md:flex-row gap-4 bg-black/40 p-4 rounded-xl border border-white/5 hover:border-yellow-500/20 transition-colors">
+                    <span class="text-yellow-400 font-bold min-w-[120px] flex items-center gap-2">
+                        <i class="fa-solid fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        &lt;USERNAME&gt;
+                    </span>
+                    <span class="text-gray-400 group-hover:text-gray-300 transition-colors">👉 အသစ်ဆောက်မည့် User (Example: devops, deployer)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase 1 -->
+        <section class="mb-24 relative">
+            <div class="absolute -left-[1px] top-0 bottom-0 w-[1px] bg-gradient-to-b from-yellow-500/50 via-gray-800 to-transparent"></div>
+            <div class="pl-8 md:pl-12">
+                <div class="mb-8">
+                    <span class="text-yellow-500 font-mono text-xs tracking-wider uppercase mb-2 block">Phase 01</span>
+                    <h2 class="text-3xl font-bold text-white mb-2">Key Preparation <span class="text-gray-500 text-lg font-normal ml-2">(Local Machine)</span></h2>
+                    <p class="text-gray-400 text-sm">မိမိကွန်ပျူတာ (Local) တွင် Key ပြင်ဆင်ခြင်း။</p>
+                </div>
+
+                <div class="grid gap-8">
+                    <!-- Step 0 -->
+                    <div class="card-glass rounded-xl p-6 md:p-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-white">🛑 Step 0: Generate New Key</h3>
+                            <span class="text-xs bg-red-900/30 text-red-400 px-2 py-1 rounded border border-red-500/20">Optional</span>
+                        </div>
+                        <p class="text-gray-400 mb-6 text-sm">Key မရှိသေးမှသာ လုပ်ပါ။ ရှိပြီးသားဆိုရင် Step 1 ကို ကျော်သွားပါ။</p>
+                        
+                        <div class="code-block rounded-lg p-5 relative group">
+                            <button onclick="copyToClipboard(this)" class="absolute right-3 top-3 bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded text-white backdrop-blur opacity-0 group-hover:opacity-100 transition-all border border-white/10">Copy</button>
+                            <pre class="font-mono text-sm text-gray-300 group-hover:text-white transition-colors overflow-x-auto">
+<span class="text-gray-500"># Generate generic key pair</span>
+ssh-keygen -t rsa -b 4096 -f &lt;KEY_NAME&gt;.pem</pre>
+                        </div>
+                        <p class="text-gray-600 text-xs mt-3 italic flex items-center gap-2">
+                            <i class="fa-solid fa-info-circle"></i> Passphrase မေးရင် Enter ခေါက်ပါ။
+                        </p>
+                    </div>
+
+                    <!-- Step 1 -->
+                    <div class="card-glass rounded-xl p-6 md:p-8">
+                        <h3 class="text-lg font-bold text-white mb-2">🔒 Step 1: Secure & Extract Public Key</h3>
+                        <p class="text-gray-400 mb-6 text-sm">Private Key ကို Permission ချပြီး Public Key ထုတ်ယူခြင်း။</p>
+                        
+                        <div class="code-block rounded-lg p-5 relative group">
+                            <button onclick="copyToClipboard(this)" class="absolute right-3 top-3 bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded text-white backdrop-blur opacity-0 group-hover:opacity-100 transition-all border border-white/10">Copy</button>
+                            <pre class="font-mono text-sm text-gray-300 group-hover:text-white transition-colors overflow-x-auto">
+<span class="text-gray-500"># 1. Secure Private Key</span>
+chmod 400 &lt;KEY_NAME&gt;.pem
+
+<span class="text-gray-500"># 2. Extract Public Key (Creates .pub file)</span>
+ssh-keygen -y -f &lt;KEY_NAME&gt;.pem > &lt;KEY_NAME&gt;.pub</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase 2 -->
+        <section class="mb-24 relative">
+            <div class="absolute -left-[1px] top-0 bottom-0 w-[1px] bg-gradient-to-b from-white/30 via-gray-800 to-transparent"></div>
+            <div class="pl-8 md:pl-12">
+                <div class="mb-8">
+                    <span class="text-gray-400 font-mono text-xs tracking-wider uppercase mb-2 block">Phase 02</span>
+                    <h2 class="text-3xl font-bold text-white mb-2">Create User <span class="text-gray-500 text-lg font-normal ml-2">(On Server)</span></h2>
+                    <p class="text-gray-400 text-sm">Server သို့ Root အဖြစ်ဝင်ရောက်ပြီး User အသစ်ဆောက်ပါမည်။</p>
+                </div>
+
+                <div class="grid gap-6">
+                    <!-- Step 2.1 -->
+                    <div class="card-glass rounded-xl p-6 hover:border-l-4 hover:border-l-yellow-500 transition-all">
+                        <h3 class="text-base font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-terminal text-gray-500"></i> 1. Login as Root</h3>
+                        <div class="code-block rounded-lg p-4 relative group">
+                            <button onclick="copyToClipboard(this)" class="absolute right-3 top-3 bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded text-white backdrop-blur opacity-0 group-hover:opacity-100 transition-all border border-white/10">Copy</button>
+                            <pre class="font-mono text-sm text-gray-300 group-hover:text-white overflow-x-auto">ssh -i &lt;KEY_NAME&gt;.pem root@&lt;SERVER_IP&gt;</pre>
+                        </div>
+                    </div>
+
+                    <!-- Step 2.2 -->
+                    <div class="card-glass rounded-xl p-6 hover:border-l-4 hover:border-l-yellow-500 transition-all">
+                        <h3 class="text-base font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-user-plus text-gray-500"></i> 2. Create User & Setup Directory</h3>
+                        <div class="code-block rounded-lg p-4 relative group">
+                            <button onclick="copyToClipboard(this)" class="absolute right-3 top-3 bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded text-white backdrop-blur opacity-0 group-hover:opacity-100 transition-all border border-white/10">Copy</button>
+                            <pre class="font-mono text-sm text-gray-300 group-hover:text-white overflow-x-auto">
+<span class="text-gray-500"># Create new user</span>
+adduser &lt;USERNAME&gt;
+
+<span class="text-gray-500"># Switch to that user</span>
+su - &lt;USERNAME&gt;
+
+<span class="text-gray-500"># Create SSH folder structure</span>
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase 3 -->
+        <section class="mb-24 relative">
+            <div class="absolute -left-[1px] top-0 bottom-0 w-[1px] bg-gradient-to-b from-yellow-500/50 via-gray-800 to-transparent"></div>
+            <div class="pl-8 md:pl-12">
+                <div class="mb-8">
+                    <span class="text-yellow-500 font-mono text-xs tracking-wider uppercase mb-2 block">Phase 03</span>
+                    <h2 class="text-3xl font-bold text-white mb-2">Deploy Key <span class="text-gray-500 text-lg font-normal ml-2">(Local to Server)</span></h2>
+                    <p class="text-gray-400 text-sm">Local စက်မှ Public Key ကို Server သို့ ပို့ဆောင်ခြင်း။</p>
+                </div>
+
+                <div class="grid gap-6">
+                    <!-- Step 3.1 -->
+                    <div class="card-glass rounded-xl p-6">
+                        <h3 class="text-base font-bold text-white mb-2">1. Upload Public Key</h3>
+                        <p class="text-gray-500 mb-3 text-xs uppercase tracking-wide">Local Terminal အသစ်ဖွင့်ပြီး ပို့ပါ</p>
+                        <div class="code-block rounded-lg p-4 relative group">
+                            <button onclick="copyToClipboard(this)" class="absolute right-3 top-3 bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded text-white backdrop-blur opacity-0 group-hover:opacity-100 transition-all border border-white/10">Copy</button>
+                            <pre class="font-mono text-sm text-gray-300 group-hover:text-white overflow-x-auto">scp -i &lt;KEY_NAME&gt;.pem &lt;KEY_NAME&gt;.pub root@&lt;SERVER_IP&gt;:/home/&lt;USERNAME&gt;/</pre>
+                        </div>
+                    </div>
+
+                    <!-- Step 3.2 -->
+                    <div class="card-glass rounded-xl p-6">
+                        <h3 class="text-base font-bold text-white mb-2">2. Install Key & Fix Permissions</h3>
+                        <p class="text-gray-500 mb-3 text-xs uppercase tracking-wide">Server Terminal (User နေရာ) မှ ဆက်လုပ်ပါ</p>
+                        <div class="code-block rounded-lg p-4 relative group">
+                            <button onclick="copyToClipboard(this)" class="absolute right-3 top-3 bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded text-white backdrop-blur opacity-0 group-hover:opacity-100 transition-all border border-white/10">Copy</button>
+                            <pre class="font-mono text-sm text-gray-300 group-hover:text-white overflow-x-auto">
+<span class="text-gray-500"># Make sure you are the target user</span>
+su - &lt;USERNAME&gt;
+
+<span class="text-gray-500"># Import Key</span>
+cat /home/&lt;USERNAME&gt;/&lt;KEY_NAME&gt;.pub >> ~/.ssh/authorized_keys
+
+<span class="text-gray-500"># Secure the authorized_keys file (Critical!)</span>
+chmod 600 ~/.ssh/authorized_keys
+
+<span class="text-gray-500"># Remove the uploaded .pub file (Cleanup)</span>
+rm /home/&lt;USERNAME&gt;/&lt;KEY_NAME&gt;.pub</pre>
+                        </div>
+                    </div>
+
+                    <!-- Step 3.3 -->
+                    <div class="card-glass rounded-xl p-6">
+                        <h3 class="text-base font-bold text-white mb-2">3. Verify Ownership (Run as Root)</h3>
+                        <p class="text-gray-500 mb-3 text-xs uppercase tracking-wide">Permission error မဖြစ်စေရန်</p>
+                        <div class="code-block rounded-lg p-4 relative group">
+                            <button onclick="copyToClipboard(this)" class="absolute right-3 top-3 bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded text-white backdrop-blur opacity-0 group-hover:opacity-100 transition-all border border-white/10">Copy</button>
+                            <pre class="font-mono text-sm text-gray-300 group-hover:text-white overflow-x-auto">
+exit <span class="text-gray-500"># Go back to root</span>
+chown -R &lt;USERNAME&gt;:&lt;USERNAME&gt; /home/&lt;USERNAME&gt;/.ssh</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase 4 -->
+        <section class="mb-24 relative">
+            <div class="absolute -left-[1px] top-0 bottom-0 w-[1px] bg-gradient-to-b from-white/30 via-gray-800 to-transparent"></div>
+            <div class="pl-8 md:pl-12">
+                <div class="mb-8">
+                    <span class="text-gray-400 font-mono text-xs tracking-wider uppercase mb-2 block">Phase 04</span>
+                    <h2 class="text-3xl font-bold text-white mb-2">Security Hardening</h2>
+                    <p class="text-gray-400 text-sm">Password စနစ်ကိုပိတ်ပြီး Key Only စနစ်သို့ ပြောင်းခြင်း။</p>
+                </div>
+
+                <div class="card-glass rounded-2xl p-8 border border-white/10">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-base font-bold text-white mb-2">1. Edit Config</h3>
+                            <div class="code-block rounded-lg p-4 mb-4 relative group">
+                                <button onclick="copyToClipboard(this)" class="absolute right-3 top-3 bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded text-white backdrop-blur opacity-0 group-hover:opacity-100 transition-all border border-white/10">Copy</button>
+                                <pre class="font-mono text-sm text-green-400">nano /etc/ssh/sshd_config</pre>
+                            </div>
+
+                            <h3 class="text-base font-bold text-white mb-2 mt-6">3. Restart SSH Service</h3>
+                            <div class="code-block rounded-lg p-4 relative group">
+                                <button onclick="copyToClipboard(this)" class="absolute right-3 top-3 bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded text-white backdrop-blur opacity-0 group-hover:opacity-100 transition-all border border-white/10">Copy</button>
+                                <pre class="font-mono text-sm text-green-400">systemctl restart ssh</pre>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-black/40 rounded-xl p-6 border border-white/5">
+                            <h3 class="text-base font-bold text-white mb-2">2. Update these lines</h3>
+                            <p class="text-gray-400 mb-3 text-xs">Ctrl+W ဖြင့် ရှာပြီး ပြင်ဆင်ပါ။</p>
+                            <div class="font-mono text-sm space-y-2">
+                                <div class="flex justify-between border-b border-gray-800 pb-2">
+                                    <span class="text-gray-400">PubkeyAuthentication</span>
+                                    <span class="text-green-400 font-bold">yes</span>
+                                </div>
+                                <div class="flex justify-between border-b border-gray-800 pb-2">
+                                    <span class="text-gray-400">PasswordAuthentication</span>
+                                    <span class="text-red-400 font-bold">no</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">ChallengeResponseAuthentication</span>
+                                    <span class="text-red-400 font-bold">no</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase 5 -->
+        <section class="mb-32 relative">
+            <div class="absolute -left-[1px] top-0 bottom-0 w-[1px] bg-gradient-to-b from-yellow-500/50 via-gray-800 to-transparent"></div>
+            <div class="pl-8 md:pl-12">
+                <div class="mb-8">
+                    <span class="text-yellow-500 font-mono text-xs tracking-wider uppercase mb-2 block">Phase 05</span>
+                    <h2 class="text-3xl font-bold text-white mb-2">Finalize <span class="text-gray-500 text-lg font-normal ml-2">(Sudo & Test)</span></h2>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Step 5.1 -->
+                    <div class="card-glass rounded-xl p-6">
+                        <h3 class="text-base font-bold text-white mb-2">1. Grant Sudo Access</h3>
+                        <p class="text-gray-400 mb-3 text-sm">User အသစ်ကို Admin rights ပေးခြင်း။</p>
+                        <div class="code-block rounded-lg p-4 relative group">
+                            <button onclick="copyToClipboard(this)" class="absolute right-3 top-3 bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded text-white backdrop-blur opacity-0 group-hover:opacity-100 transition-all border border-white/10">Copy</button>
+                            <pre class="font-mono text-sm text-gray-300 group-hover:text-white overflow-x-auto">
+<span class="text-gray-500"># Run as Root</span>
+usermod -aG sudo &lt;USERNAME&gt;</pre>
+                        </div>
+                    </div>
+
+                    <!-- Step 5.2 -->
+                    <div class="card-glass rounded-xl p-6 border border-green-500/30 bg-green-900/5">
+                        <h3 class="text-base font-bold text-white mb-2">2. Final Connection Test</h3>
+                        <p class="text-gray-400 mb-3 text-sm">Local machine မှ လှမ်းချိတ်ကြည့်ပါ။</p>
+                        <div class="code-block rounded-lg p-4 relative group !border-l-green-500">
+                            <button onclick="copyToClipboard(this)" class="absolute right-3 top-3 bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded text-white backdrop-blur opacity-0 group-hover:opacity-100 transition-all border border-white/10">Copy</button>
+                            <pre class="font-mono text-sm text-green-400 overflow-x-auto">ssh -i &lt;KEY_NAME&gt;.pem &lt;USERNAME&gt;@&lt;SERVER_IP&gt;</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Success Message -->
+        <section class="max-w-2xl mx-auto text-center p-12 card-glass rounded-3xl border-t border-t-green-500/50 mb-20 animate-float">
+            <div class="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fa-solid fa-check text-2xl text-green-400"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-4">Setup Complete</h2>
+            <p class="text-gray-300 leading-relaxed">Password မတောင်းဘဲ ဝင်သွားရင် Setup ပြီးပြည့်စုံပါပြီ။<br>လုံခြုံစိတ်ချရသော Server အသစ်ကို အသုံးပြုနိုင်ပါပြီ။</p>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-12 text-gray-600 text-xs font-mono tracking-widest border-t border-gray-900/50 bg-black/50 backdrop-blur-md">
+        <p>&copy; 2025 SSH KEY MASTER GUIDE • SECURE SHELL PROTOCOL</p>
+    </footer>
+
+    <script>
+        function copyToClipboard(button) {
+            const pre = button.nextElementSibling;
+            const text = pre.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerText;
+                button.innerText = 'Copied';
+                button.classList.add('bg-white', 'text-black', 'border-transparent');
+                button.classList.remove('bg-white/10', 'text-white');
+                
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.classList.remove('bg-white', 'text-black', 'border-transparent');
+                    button.classList.add('bg-white/10', 'text-white');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
